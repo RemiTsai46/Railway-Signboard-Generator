@@ -1,0 +1,33 @@
+line name
+- main line
+- branch line
+- partner line
+line dir
+- main line
+- branch line(might merge into main line)
+- BX,Zym line(might merge into main line)
+- ILC line with sta name(might merge into main line)
+- OTS (by hand)
+station signboard at exit
+- black
+- white
+station signboard at platform
+- main,ILC line
+- BX line
+- Zym line
+nextstop arrow left
+- main,ILC line
+- BX,Zym line but dir
+nextstop arrow right
+- main,ILC line
+- BX,Zym line but dir
+nextstop arrow tail left
+- main,ILC line
+- BX,Zym line(no dir restriction)
+nextstop arrow tail right
+- main,ILC line
+route map(by hand)
+- main line
+- BX line
+- Zym line
+- OTS line

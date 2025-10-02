@@ -1,0 +1,53 @@
+coords definition:
+XX: exact pos(from 0)
+XXth: pos number (starting from 0)
+
+pillow baseline pos chi: XXth(last occupied pixel)
+pillow baseline pos eng: XX(exact pos)
+
+in MS Paint:
+
+地鐵 1 號線 : 10
+往 : 10
+橙岩廣場 : 16
+O. stone : 18
+1 : 39
+
+paint.net:
+
+line name:
+title: arial narrow 32
+line name English: arial 12(12px) baseline 94
+line name Chinese: msjh 12(15px hi) baseline 117
+
+linedir:
+(4px gap)
+dir Chinese: arial 12(15px) baseline 19
+dir English: arial 12(12px) baseline 19
+(4px gap)
+title:
+(5px gap including edge)
+line name: (14px) baseline 43(36 mid)
+(5px gap)
+(4px gap)
+stn code: (12px) baseline 64(58 mid)
+5px gap
+3px edge
+(8px gap)
+target sta Chinese: msjh 16(19px)->14->12 baseline 94
+(8px gap)
+target sta English: arial 16(15px)->14->12 baseline 121
+(5px gap)
+=126px
+
+SAE:
+Chinese Stn. name: arial 17(20px) baseline 44
+English Stn. name: arial (10px) baseline 63
+SAP:
+Chinese Stn. name: arial 17(20px) baseline 39
+English Stn. name: arial (10px) baseline 58
+
+ULTIMATE RULE: align all object in the y coords midline except dir in linedir
+
+chinese minimum textsize 14(pillow) 10(paint.net)(10-11px)
+english minimum textsize 10(pillow) 7(paint.net)(7px)
