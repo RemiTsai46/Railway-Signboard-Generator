@@ -26,3 +26,6 @@ draw = ImageDraw.Draw(im)
 
 im.save("output.png")
 
+bgBox(isCurrSta,ChineseText,EnglishText)
+Chinese(isCurrSta,ChineseText)
+English(isCurrSta,EnglishText)

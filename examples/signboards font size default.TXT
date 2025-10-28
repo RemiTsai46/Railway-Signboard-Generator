@@ -2,7 +2,8 @@ coords definition:
 XX: exact pos(from 0)
 XXth: pos number (starting from 0)
 
-pillow baseline pos chi: XXth(last occupied pixel)
+pillow baseline pos chi: unfixed
+pillow bottom line pos chi: XX(exact pos)
 pillow baseline pos eng: XX(exact pos)
 
 in MS Paint:
@@ -47,7 +48,11 @@ SAP:
 Chinese Stn. name: arial 17(20px) baseline 39
 English Stn. name: arial (10px) baseline 58
 
+PSAP:
+
+
 ULTIMATE RULE: align all object in the y coords midline except dir in linedir
 
 chinese minimum textsize 14(pillow) 10(paint.net)(10-11px)
 english minimum textsize 10(pillow) 7(paint.net)(7px)
+ImageDraw.line center at XXth pos

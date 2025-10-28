@@ -1,8 +1,8 @@
 from PIL import Image
 
-originalPath = "examples/psap_zym_co_next_circled.png"
+originalPath = "resources/test.png"
 
 im = Image.open(originalPath)
-imoutput = im.resize((128,128),Image.Resampling.BILINEAR)
+imoutput = im.resize((10,21),Image.Resampling.BILINEAR)
 
 imoutput.save("output2.png")

@@ -2,27 +2,28 @@ from PIL import Image, ImageDraw, ImageFont
 
 def bgBox(isCurrSta, ChineseText, EnglishText):
 
+    #Var Init
+    W = 128
+    boxWidth = 0
+
+    #Open image
+    im = Image.open("output.png")
+    draw = ImageDraw.Draw(im)
+
     if isCurrSta:
-
-        #Var Init
-        W = 128
+        
         EnglishFontSize = 13
-        boxWidth = 0
-
-        #Open image
-        im = Image.open("output.png")
-        draw = ImageDraw.Draw(im)
         #Var Init
-        ChineseFont = ImageFont.truetype("resources/msjh.ttf", 18)
+        ChineseFont = ImageFont.truetype("resources/fonts/msjh.ttf", 18)
         ChineseWidth = draw.textlength(ChineseText, font = ChineseFont)
-        EnglishFont = ImageFont.truetype("resources/arial.ttf", EnglishFontSize)
+        EnglishFont = ImageFont.truetype("resources/fonts/arial.ttf", EnglishFontSize)
         EnglishWidth = draw.textlength(EnglishText, font = EnglishFont)
 
         #Check if too long
         while EnglishFontSize >= 9:
             if EnglishWidth > 122:
                 EnglishFontSize = EnglishFontSize - 1
-                EnglishFont = ImageFont.truetype("resources/arial.ttf", EnglishFontSize)
+                EnglishFont = ImageFont.truetype("resources/fonts/arial.ttf", EnglishFontSize)
                 EnglishWidth = draw.textlength(EnglishText, font = EnglishFont)
                 if EnglishFontSize < 9:
                     print("English station name is too long! Please shorten the name.")
@@ -37,12 +38,15 @@ def bgBox(isCurrSta, ChineseText, EnglishText):
         if boxWidth % 2 == 1:
             boxWidth = boxWidth + 1
 
-        draw.rectangle([16,(W-boxWidth)/2,65,(W+boxWidth)/2],fill="black")
+        draw.rectangle([(W-boxWidth)/2,16,(W+boxWidth)/2,65],fill="black")
+
+    im.save("output.png")
         
 def Chinese(isCurrSta, ChineseText):
     
     #Var Init
-    W = 384
+    W = 128
+    fgColor = "white" if isCurrSta else "black"
  
     #Open image
     im = Image.open("output.png")
@@ -50,20 +54,18 @@ def Chinese(isCurrSta, ChineseText):
 
     ##CHINESE TEXT
 
-    ChineseFont = ImageFont.truetype("resources/msjh.ttf", 18)
-    ChineseFontSmall = ImageFont.truetype("resources/msjh.ttf", 14)
-    if isCurrSta:
-        draw.text((W/2,44), ChineseText, fill = "white", font = ChineseFont, anchor = "ms")
-    else:
-        draw.text((W/2,44), ChineseText, fill = "black", font = ChineseFontSmall, anchor = "ms")
-
+    ChineseFont = ImageFont.truetype("resources/fonts/msjh.ttf", 18)
+    ChineseFontSmall = ImageFont.truetype("resources/fonts/msjh.ttf", 14)
+    font = ChineseFont if isCurrSta else ChineseFontSmall
+    font = ChineseFont
+    draw.text((W/2,44), ChineseText, fill = fgColor, font = font, anchor = "ms")
 
     im.save("output.png")
 
 def English(isCurrSta, EnglishText):
     
     #Var Init
-    W = 384
+    W = 128
     EnglishFontSize = 13
     EnglishFontSmallSize = 9
     EnglishWidthOk = False
@@ -75,15 +77,15 @@ def English(isCurrSta, EnglishText):
     ##ENGLISH TEXT
 
     #Var Init
-    EnglishFont = ImageFont.truetype("resources/arial.ttf", EnglishFontSize)
-    EnglishFontSmall = ImageFont.truetype("resources/msjh.ttf", EnglishFontSmallSize)
+    EnglishFont = ImageFont.truetype("resources/fonts/arial.ttf", EnglishFontSize)
+    EnglishFontSmall = ImageFont.truetype("resources/fonts/msjh.ttf", EnglishFontSmallSize)
     EnglishWidth = draw.textlength(EnglishText, font = EnglishFont)
     
     #Check if too long
     while EnglishFontSize >= 9:
         if EnglishWidth > 122:
             EnglishFontSize = EnglishFontSize - 1
-            EnglishFont = ImageFont.truetype("resources/arial.ttf", EnglishFontSize)
+            EnglishFont = ImageFont.truetype("resources/fonts/arial.ttf", EnglishFontSize)
             EnglishWidth = draw.textlength(EnglishText, font = EnglishFont)
             if EnglishFontSize < 9:
                 print("English station name is too long! Please shorten the name.")
