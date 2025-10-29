@@ -4,7 +4,7 @@ from PIL import Image, ImageDraw
 dotSize = "big" # big / small
 isCurrSta = True
 
-ChineseText = "兔嶼"
+ChineseText = "紅石展覽館"
 EnglishText = "Usagishima"
 countOfLines = 3
 platformLine = 0

@@ -58,7 +58,7 @@ def Chinese(isCurrSta, ChineseText):
     ChineseFontSmall = ImageFont.truetype("resources/fonts/msjh.ttf", 14)
     font = ChineseFont if isCurrSta else ChineseFontSmall
     font = ChineseFont
-    draw.text((W/2,44), ChineseText, fill = fgColor, font = font, anchor = "ms")
+    draw.text((W/2,39), ChineseText, fill = fgColor, font = font, anchor = "mb")
 
     im.save("output.png")
 
@@ -96,8 +96,8 @@ def English(isCurrSta, EnglishText):
 
     if EnglishWidthOk:
         if isCurrSta:
-            draw.text((W/2,58), EnglishText, fill = "white", font = EnglishFont, anchor = "mm")
+            draw.text((W/2,58), EnglishText, fill = "white", font = EnglishFont, anchor = "ms")
         else:
-            draw.text((W/2,58), EnglishText, fill = "black", font = EnglishFontSmall, anchor = "mm")
+            draw.text((W/2,58), EnglishText, fill = "black", font = EnglishFontSmall, anchor = "ms")
     
     im.save("output.png")
