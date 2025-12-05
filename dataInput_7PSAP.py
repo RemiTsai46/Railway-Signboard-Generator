@@ -2,7 +2,7 @@ from main_7PSAP import *
 from PIL import Image, ImageDraw
 
 dotSize = "big" # big / small
-isCurrSta = True
+small = True
 
 ChineseText = "紅石展覽館"
 EnglishText = "Usagishima"
@@ -26,6 +26,7 @@ draw = ImageDraw.Draw(im)
 
 im.save("output.png")
 
-bgBox(isCurrSta,ChineseText,EnglishText)
-Chinese(isCurrSta,ChineseText)
-English(isCurrSta,EnglishText)
+bgBox(small,ChineseText,EnglishText)
+Chinese(small,ChineseText)
+English(small,EnglishText)
+lineColors(small,platformLine,lines)

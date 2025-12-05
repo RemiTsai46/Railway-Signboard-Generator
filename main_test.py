@@ -15,32 +15,70 @@ class DragDropTreeview(ttk.Treeview):
 
     def on_item_pressed(self, event):
         item = self.identify_row(event.y)
+        # print(f"[PRESS] y={event.y}, identified row = {item!r}")
         if item:
+            # print(f"  → dragging_item set to {item}")
             self.dragging_item = item
 
     def on_item_dragged(self, event):
-        if self.dragging_item:
-            self.configure(cursor="hand2")
+        """While dragging: change cursor and highlight potential drop target."""
+        if not self.dragging_item:
+            # print(f"[DRAG] y={event.y}, but no dragging_item yet")
+            return
+
+        self.configure(cursor="hand2")
+
+        # Highlight potential target row for visual feedback
+        target = self.identify_row(event.y)
+        # print(f"[DRAG] dragging {self.dragging_item!r} over y={event.y}, target={target!r}")
+        if target:
+            self.selection_set(target)
+        else:
+            # Hovering blank space — clear highlight to show no valid drop
+            self.selection_remove(self.selection())
 
     def on_item_released(self, event):
+        # print(f"[RELEASE] y={event.y}, dragging_item={self.dragging_item!r}")
         if not self.dragging_item:
+            self.configure(cursor="")
             return
 
         target_item = self.identify_row(event.y)
+        # print(f"  → identified target_item={target_item!r}")
         if not target_item or target_item == self.dragging_item:
+            # print("  → invalid target (none or same item), cancelling drop")
+            self.configure(cursor="")
+            self.dragging_item = None
             return
 
         dragging_parent = self.parent(self.dragging_item)
         target_parent = self.parent(target_item)
+        # print(f"  → dragging_parent={dragging_parent!r}, target_parent={target_parent!r}")
 
-        if target_parent == "":
-            new_parent = target_item
-            new_index = "end"
+        # dragging_is_group = (dragging_parent == "")
+        target_is_group = (target_parent == "")
+        if dragging_parent == "":
+            if target_parent == "":
+                new_index = self.index(target_item)
+                self.move(self.dragging_item, "", new_index)
+            elif target_parent != "":
+                new_index = self.index(target_parent)
+                self.move(self.dragging_item, "", new_index)
+            # otherwise, ignore
+            else:
+                pass
         else:
-            new_parent = target_parent
-            new_index = self.index(target_item) + 1
-
-        self.move(self.dragging_item, new_parent, new_index)
+            # Same parent → reorder within same group
+            if dragging_parent == target_parent:
+                new_index = self.index(target_item)
+                self.move(self.dragging_item, dragging_parent, new_index)
+            # Drop onto group → move inside that group (append)
+            elif target_is_group:
+                self.move(self.dragging_item, target_item, "end")
+            else:
+                # Drop on child in another group → TBA
+                pass
+        
         self.configure(cursor="")
         self.dragging_item = None
 
@@ -71,7 +109,7 @@ class ListManagerApp:
         self.tree.column("plus", width=40,anchor="center") #tba: default height 20
         
         # Click Binds
-        self.tree.bind("<Button-1>", self.on_header_click) # add group
+        self.tree.bind("<Button-1>", self.on_header_click,add="+") # add group
         self.tree.bind("<Button-1>", self.on_group_click,add="+") # add item
         self.tree.bind("<Double-1>", self.on_cell_double_click) # edit item/properties
         self.tree.bind("<<TreeviewSelect>>", self.on_select) #select
@@ -111,6 +149,7 @@ class ListManagerApp:
             "Treeview",
             background=[("disabled", "SystemButtonFace"),("selected", "#99ccff")],  # Keep the background unchanged when selected
             foreground=[("disabled", "SystemGrayText"),("selected", "black")],  # Keep text color normal
+            
         )
         
         self.style.configure("Treeview.Item", padding=0)
@@ -130,13 +169,17 @@ class ListManagerApp:
         """Detects clicks on the 'Add Group' text inside the header."""
         region = self.tree.identify("region", event.x, event.y)
         col = self.tree.identify_column(event.x)
-        if region == "heading" and col == "#5":  # If clicked in the first column header
+        if int(col[1:]) == 0:
+            return
+        if region == "heading" and self.tree["columns"][int(col[1:]) - 1] == "plus":  # If clicked in the first column header
             self.add_group()
             
     def on_group_click(self, event):
         item = self.tree.identify_row(event.y)
         col = self.tree.identify_column(event.x)
-        if item and col == "#5" and self.tree.parent(item) == "":
+        if not item or int(col[1:]) == 0:
+            return
+        if item and self.tree["columns"][int(col[1:]) - 1] == "plus" and self.tree.parent(item) == "":
             self.add_line(item)
             
     def on_cell_double_click(self, event):
@@ -188,7 +231,7 @@ class ListManagerApp:
         for item in self.tree.selection():
             bgColor = self.tree.set(item,self.tree["columns"][0])
             fgColor = self.tree.set(item,self.tree["columns"][1])
-            self.apply_color(item,bgColor,fgColor)  
+            self.apply_color(item,bgColor,fgColor)
                 
     ## Add Object Functions
 
@@ -197,10 +240,10 @@ class ListManagerApp:
         group_count = len(self.tree.get_children()) + 1
         group_id = self.tree.insert("", "end", text=f" Group {group_count}", values=("","","","[+]"), open=True)
 
-    def add_line(self, group_id, color):
+    def add_line(self, group_id, color="#ffffff"):
         if group_id:
             line_count = len(self.tree.get_children(group_id))
-            new_name = f"Line {line_count}"
+            new_name = f"Line {line_count+1}"
             
             new_item = self.tree.insert(group_id, "end", text=new_name, values=("#ffffff","black","01"))
             new_bgColor = self.tree.set(new_item,self.tree["columns"][0])

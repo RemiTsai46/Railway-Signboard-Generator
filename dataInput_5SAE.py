@@ -14,7 +14,7 @@ lines = [
     ]
     #"line short name","line color","line text color","stn num"
     # if LRT, stncode = None
-    #If partnerStyle is chosen, please do not generate LRT as it doesn't exist in Original Edition.
+    # tpa partner style lrt color
 
 # ==================== IMAGE INITIALIZING ==================== #
 

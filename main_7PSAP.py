@@ -1,4 +1,5 @@
 from PIL import Image, ImageDraw, ImageFont
+from resources.functions.shapes import ellipse
 
 def bgBox(isCurrSta, ChineseText, EnglishText):
 
@@ -101,3 +102,31 @@ def English(isCurrSta, EnglishText):
             draw.text((W/2,58), EnglishText, fill = "black", font = EnglishFontSmall, anchor = "ms")
     
     im.save("output.png")
+
+def lineColors(isCurr,p,linesGrouped):
+     #Var Init
+    W = 128
+
+    #Ungrouping lines
+    lines = []
+    for l in range(len(linesGrouped)):
+        if isinstance(linesGrouped[l][0],list):
+            for m in range(len(linesGrouped[l])):
+                lines.append(linesGrouped[l][m])
+        else:
+            lines.append(linesGrouped[l])
+
+    #Open image
+    im = Image.open("output.png")
+    draw = ImageDraw.Draw(im)
+    #line color
+    draw.rectangle([0,78,W-1,83], fill = lines[p][1])
+
+    #center circle
+    ellipse(im,[(W-24)/2,69,(W+24)/2-1,92],fill="white",outline="black",width=3)
+    
+    im.save("output.png")
+
+def transferLines(p,):
+    pass
+
