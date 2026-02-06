@@ -59,13 +59,13 @@ def padCalc(text,fontName,font):
         padR = fontPads[fontName][1]
         
     padM = padL + padR
-    print(draw.textlength("1",font=font)*padM)
+    print("pad size float:",draw.textlength("1",font=font)*padM)
     if padM < 0:
         pad = math.ceil(draw.textlength("1",font=font)*padM)
     else:
         pad = math.floor(draw.textlength("1",font=font)*padM)
         
-    print(pad)
+    print("pad size int:",pad)
     
     return pad
 

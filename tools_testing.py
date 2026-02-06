@@ -10,15 +10,15 @@
 # print(x,16)
 # print((hex(x)))
 
-# from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw
 
-# im = Image.new("RGBA",(512,512),"#666666")
-# draw = ImageDraw.Draw(im)
+im = Image.new("RGBA",(128,128),"#666666")
+draw = ImageDraw.Draw(im)
 
-# draw.ellipse([128,128,383,383],fill=None,outline="#000000",width=8)
-# im = im.resize((128,128),Image.Resampling.BOX)
+draw.ellipse([32,32,95,95],fill=None,outline="#000000",width=2)
+im = im.resize((128,128),Image.Resampling.BOX)
 
-# im.save("output3.png")
+im.save("output3.png")
 
 # a = input()
 # print(type(a))
@@ -29,7 +29,7 @@
 # print(float(x))
 # print(bin(x)[2:])
 
-a = int(input("Enter size: "))
+# a = int(input("Enter size: "))
 
-for i in range(1,a+1):
-    print(" "*(a-i)+" ".join("*"*i))
+# for i in range(1,a+1):
+#     print(" "*(a-i)+" ".join("*"*i))

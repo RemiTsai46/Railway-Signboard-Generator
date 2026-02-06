@@ -4,6 +4,8 @@ from resources.functions.calculations import padCalc,RTSAE
 from resources.value_sets import RTSAE_posSet
 import math
 
+calc = RTSAE()
+
 def Chinese(width, ChineseText):
     
     #Var Init
@@ -136,7 +138,6 @@ def stationCodes(width, pStyle, COL, linesGrouped):
     
     #Var Init
     W = 128*width
-    calc = RTSAE()
 
     #Open image
     im = Image.open("output.png")
@@ -174,7 +175,7 @@ def stationCodes(width, pStyle, COL, linesGrouped):
     #Length Calculating
     boxWidths = calc.boxWidths(len(lines),lines,font,3)
 
-    for i in range(3):
+    while rows <= 3:
         BWTotals = []
         boxGaps = []
         if rows > 1:

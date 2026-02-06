@@ -2,7 +2,6 @@ from PIL import Image,ImageDraw
 from PIL._typing import Coords
 from typing import *
 
-# deprecated?
 def circle(
         im:Image.Image,
         xy:Sequence[float],

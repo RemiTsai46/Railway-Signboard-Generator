@@ -190,7 +190,7 @@ class ListManagerApp:
         if col == "#0":
             self.tree.after(0, lambda: self.tree.item(item_id, open=True))  # Keep group open
 
-        if (not item_id) or col == ("#2" or "#5"):  # Don't edit the first column
+        if (not item_id) or col == ("#5"):  # Don't edit the first column
             return
         
         # Check if the item is a group (i.e., its parent is "")
