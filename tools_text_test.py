@@ -14,14 +14,18 @@ draw.text((64,43),"鐵軌蘭",fill = "black",font = ChineseFont, anchor="mb")
 EnglishFont = ImageFont.truetype("resources/fonts/arial.ttf",10)
 EnglishFontN = ImageFont.truetype("resources/fonts/arialn.ttf",16)
 draw.text((64,85),"Cl",fill = "black",font = EnglishFont, anchor="ms")
-draw.line([32,85,56,85],"red",width=5)
-draw.line([72,85,96,85],"red",width=1)
+# draw.line([32,85,56,85],"red",width=5)
+# draw.line([72,85,96,85],"red",width=1)
 # draw.text((72,85),"Cl",fill = "black",font = EnglishFontN, anchor="mm")
 textlen = draw.textlength("Clockwise",font=EnglishFont)
 print(textlen)
 #draw.rectangle([64,64,64+textlen-1,108],outline="red")
 
-test_bool = False
+for i in range(1,8):
+    draw.line([16*i-8,100,16*i+7,100],"red",width=i)
+print(im.getpixel([8,100]))
+
+test_bool = True
 
 test_int = int(test_bool)
 print(test_int)

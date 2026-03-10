@@ -17,7 +17,7 @@ def circle(
     #var init
     x0,y0,x1,y1 = (xy[0] - radius, xy[1] - radius, xy[0] + radius, xy[1] + radius)
 
-    print(x0,y0,x1,y1)
+    print("Four corners:",x0,y0,x1,y1)
     
     W = int(x1 - x0 + 1)
     H = int(y1 - y0 + 1)
@@ -158,3 +158,53 @@ def roundRect(
     rectangle = rectangle.resize((W,H),Image.Resampling.BOX)
 
     im.paste(color,(int(x0),int(y0)),rectangle)
+
+def stripes(
+    im:Image.Image,
+    direction:str,
+    xy:Coords,
+    colors: list = None,
+    width: int = 4,
+    single_width: int = 6,
+    max_ttl_width: int | None = None
+) -> None:
+    """
+    Draw multiple lines at the same time.
+    Horizontal mode draws from upper to lower.
+    Vertical mode draws from left to right.
+    """
+
+    # tba param description
+    # direction make ValueError: bad direction specified: {direction}
+    # anchor l m r, ask stripes from and to ('h' ask x, 'v' ask y)
+    # ask anchor pos('h' ask y, 'v' ask x) throw error if 2 of them not the same
+
+    # var init
+
+    if isinstance(xy[0], (list, tuple)):
+        (x0, y0), (x1, y1) = cast(Sequence[Sequence[float]], xy)
+    else:
+        x0, y0, x1, y1 = cast(Sequence[float], xy)
+
+    # bad value handler
+    if not (direction == 'h' or direction == 'v'):
+        msg = f"bad direction specified: {direction}"
+        raise ValueError(msg)
+
+    if x1 < x0:
+        if direction == "h":
+            msg = "x1 must be greater than or equal to x0 in horizontal stripes"
+        else:
+            msg = "x1 must be equal to x0 in vertical stripes"
+        raise ValueError(msg)
+    if y1 < y0:
+        if direction == "v":
+            msg = "y1 must be greater than or equal to y0 in vertical stripes"
+        else:
+            msg = "y1 must be equal to y0 in horizontal stripes"
+        raise ValueError(msg)
+    
+    
+    if direction == 'h':
+        if y0 != y1:
+            msg = "y1 must be equal to y0 in horizontal stripes"

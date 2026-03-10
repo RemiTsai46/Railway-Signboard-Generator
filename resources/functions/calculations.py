@@ -1,11 +1,15 @@
 from PIL import Image,ImageDraw,ImageFont
 import re
 import math
-from ..value_sets import fontPads
+from resources.value_sets import fontPads
 
-def ChiWidthCalc(width:int,text:str,ChiFontName:str,EngFontName:str,fontSize:int) -> (
-        tuple[list,int,list,bool]
-        ):
+def ChiWidthCalc(
+        width:int,
+        text:str,
+        ChiFontName:str,
+        EngFontName:str,
+        fontSize:int
+        ) -> tuple[list,int,list,bool]:
     #var init
     values = []
     ChiFont = ImageFont.truetype(ChiFontName,fontSize)
