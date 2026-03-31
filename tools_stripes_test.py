@@ -50,7 +50,7 @@ def stripes(
         msg = f"bad direction specified: {direction}"
     
     if direction == 'h':
-        x0 = int(x0); x1 = int(x1)
+        x0 = int(x0); x1 = int(x1) # fixed int stripe length
         if y0 != y1:
             msg = "y1 must be equal to y0 in horizontal stripes"
         if x1 < x0:
@@ -58,7 +58,7 @@ def stripes(
         if anchor not in ['t','m','b']:
             msg = f"bad anchor specified: {anchor}"
     if direction == 'v':
-        y0 = int(y0); y1 = int(y1)
+        y0 = int(y0); y1 = int(y1) # fixed int stripe length
         if x1 != x0:
             msg = "x1 must be equal to x0 in vertical stripes"
         if y1 < y0:
@@ -70,37 +70,52 @@ def stripes(
         raise ValueError(msg)
     
     # VAR INIT
-
+    
     cnt = len(colors)
     colors.append("#00000000")
 
-    # switch if horizontal for optimising
-    if direction == 'h': ix0,ix1,iy0,iy1 = y0,y1,x0,x1
-    else: ix0,ix1,iy0,iy1 = x0,x1,y0,y1
-    # y1, y0 are all int
+    # switch if horizontal for optimising(ix is ptr, iy fixed width)
+    # if direction == 'h': ix0,ix1,iy0,iy1 = y0,y1,x0,x1 # if horizontal iy is x
+    # else: ix0,ix1,iy0,iy1 = x0,x1,y0,y1
+
+    # Width calc
     if max_ttl_width == None: max_ttl_width = width*cnt
-    W,H = min(width*cnt,max_ttl_width)+1, iy1-iy0+1
-    # now x0 == x1
-    
-    if width*cnt > max_ttl_width:
-        width = (max_ttl_width/cnt)
+    if width*cnt > max_ttl_width: width = (max_ttl_width/cnt)
+    wd = min(width*cnt,max_ttl_width)+1
 
     # Anchor calc
     # anchor in ['t','l'] pass
-    print(ix0)
-    if anchor == 'm':
-        ix0 = ix0-((W-1)/2)
-    elif anchor in ['r','b']:
-        ix0 = ix0-W+1
-    print(ix0)
-
-    print(W,H)
-    imstrp = Image.new("RGBA",(W,H),"#00000000")
-    drawstrp = ImageDraw.Draw(imstrp)
+    if direction == 'h':
+        if anchor == 'm':
+            y0 -= (wd-1)/2
+        elif anchor == 'b':
+            y0 -= (wd-1)
+    else:
+        if anchor == 'm':
+            x0 -= (wd-1)/2
+        elif anchor == 'r':
+            x0 -= (wd-1)
 
     l,r = -1,-1
-    nx0 = ix0 - floor(ix0)
-    split = nx0
+
+    if direction == 'h':
+        X_SIZE,Y_SIZE = x1-x0+1,wd
+        ix0,ix1 = 0,X_SIZE-1
+        iy0,iy1 = l,r
+        split = y0-floor(y0)
+    else:
+        X_SIZE,Y_SIZE = wd,y1-y0+1
+        ix0,ix1 = l,r
+        iy0,iy1 = 0,Y_SIZE-1
+        split = x0-floor(x0)
+
+    icoords = [ix0,iy0,ix1,iy1]
+
+    print(x0,y0)
+
+    print(X_SIZE,Y_SIZE)
+    imstrp = Image.new("RGBA",(X_SIZE,Y_SIZE),"#00000000")
+    drawstrp = ImageDraw.Draw(imstrp)
 
     def color_calc(c1, c2, a): # a 0 prev 1 next
         if a == 0: return c1
@@ -120,33 +135,39 @@ def stripes(
 
         return (int(r),int(g),int(b),int(a))
 
+    def move_lr(l,r,ic):
+        if direction == 'h':
+            ic[1],ic[3] = l,r
+        else:
+            ic[0],ic[2] = l,r
+        print(icoords)
+
     c = 0 # color ptr
-    print(cnt,W)
-    for i in range(0,W):
+    print(cnt,wd)
+    for i in range(0,wd):
         if i <= split < i+1:
             # draw plain color
             if l <= r and l>=0 and r>=0:
-                drawstrp.rectangle([l,0,r,H-1],fill=colors[c-1])
+                drawstrp.rectangle(icoords,fill=colors[c-1])
             
-            l = i; r = i
+            l=i;r=i
+            move_lr(l,r,icoords)
             if split != floor(split):
                 color = color_calc(colors[c-1],colors[c],split-floor(split))
-                drawstrp.rectangle([l,0,r,H-1],fill=color)
-                l += 1; r += 1
+                drawstrp.rectangle(icoords,fill=color)
+                l+=1;r+=1
+                move_lr(l,r,icoords)
 
             print(c, split, split+width)
-            c += 1
+            c+=1
             split += width
         else:
-            r += 1
+            r+=1
+            move_lr(l,r,icoords)
 
-    if direction == 'h':
-        imstrp = imstrp.rotate(-90)
-        x0,y0 = int(iy0),int(ix0)
-    else:
-        x0,y0 = int(ix0),int(iy0)
+    x0,y0 = int(x0),int(y0)
 
-    imstrp.save("outputstr.png")
+    # imstrp.save("outputstr.png")
     
     print(x0,y0)
     im.alpha_composite(imstrp,(x0,y0))
@@ -160,7 +181,7 @@ def stripes(
 im = Image.new('RGBA',(64,64),"#FFFFFF")
 draw = ImageDraw.Draw(im)
 
-colors = ["#FF0000","#00FF00","#0000FF","#FF00FF"]
+colors = ["#FF0000","#00FF00","#0000FF"]
 stripes(im,[27,32,36,32],colors=colors,direction='h',anchor='m',width = 3)
 im.show()
 im.save("output2.png")

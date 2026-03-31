@@ -14,6 +14,12 @@ if n in [n3,n2]:
 else: 
     print("no")
 
+a=3
+b=a
+a=5
+print(b)
+
+
 # from PIL import Image, ImageDraw
 
 # im = Image.new("RGBA",(128,128),"#666666")
