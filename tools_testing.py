@@ -14,10 +14,10 @@ if n in [n3,n2]:
 else: 
     print("no")
 
-a=3
-b=a
-a=5
-print(b)
+a = 114.114514
+print(a%1)
+b=0.1+0.2
+print(f"{b:.40f}")
 
 
 # from PIL import Image, ImageDraw

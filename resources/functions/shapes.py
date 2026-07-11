@@ -1,7 +1,7 @@
 from PIL import Image,ImageColor,ImageDraw
 from PIL._typing import Coords
-from typing import *
-from math import floor
+from typing import Sequence,cast
+from math import floor,ceil
 
 def circle(
         im:Image.Image,
@@ -222,6 +222,9 @@ def stripes(
             msg = "y1 must be greater than or equal to y0 in vertical stripes"
         if anchor not in ['l','m','r']:
             msg = f"bad anchor specified: {anchor}"
+
+    if single_width > max_ttl_width:
+        msg = "single_width must be less than or equal to max_ttl_width"
         
     if msg != None:
         raise ValueError(msg)
@@ -236,32 +239,35 @@ def stripes(
     # else: ix0,ix1,iy0,iy1 = x0,x1,y0,y1
 
     # Width calc
-    if max_ttl_width == None: max_ttl_width = width*cnt
+    if max_ttl_width == None: max_ttl_width = width*cnt  
     if width*cnt > max_ttl_width: width = (max_ttl_width/cnt)
-    wd = min(width*cnt,max_ttl_width)+1
+    wd = min(width*cnt,max_ttl_width)
+    if cnt == 1:
+        wd = single_width
+        width = single_width
 
     # Anchor calc
     # anchor in ['t','l'] pass
     if direction == 'h':
         if anchor == 'm':
-            y0 -= (wd-1)/2
+            y0 -= wd/2
         elif anchor == 'b':
-            y0 -= (wd-1)
+            y0 -= wd
     else:
         if anchor == 'm':
-            x0 -= (wd-1)/2
+            x0 -= wd/2
         elif anchor == 'r':
-            x0 -= (wd-1)
+            x0 -= wd
 
     l,r = -1,-1
 
     if direction == 'h':
-        X_SIZE,Y_SIZE = x1-x0+1,wd
+        X_SIZE,Y_SIZE = x1-x0+1,ceil(wd)+1
         ix0,ix1 = 0,X_SIZE-1
         iy0,iy1 = l,r
         split = y0-floor(y0)
     else:
-        X_SIZE,Y_SIZE = wd,y1-y0+1
+        X_SIZE,Y_SIZE = ceil(wd)+1,y1-y0+1
         ix0,ix1 = l,r
         iy0,iy1 = 0,Y_SIZE-1
         split = x0-floor(x0)
@@ -297,11 +303,11 @@ def stripes(
             ic[1],ic[3] = l,r
         else:
             ic[0],ic[2] = l,r
-        print(icoords)
+        # print(icoords)
 
     c = 0 # color ptr
     print(cnt,wd)
-    for i in range(0,wd):
+    for i in range(0,ceil(wd)+1):
         if i <= split < i+1:
             # draw plain color
             if l <= r and l>=0 and r>=0:
